@@ -37,7 +37,7 @@ System::System(const string &strVocFile,					//词典文件路径
 			   const eSensor sensor,						//传感器类型
                const bool bUseViewer):						//是否使用可视化界面
 					 mSensor(sensor), 							//初始化传感器类型
-					 mpViewer(static_cast<Viewer*>(NULL)),		//空。。。对象指针？  TODO 
+					 mpViewer(static_cast<Viewer*>(NULL)),		//空。。。对象指针？  TODO
 					 mbReset(false),							//无复位标志
 					 mbActivateLocalizationMode(false),			//没有这个模式转换标志
         			 mbDeactivateLocalizationMode(false)		//没有这个模式转换标志
@@ -102,7 +102,7 @@ System::System(const string &strVocFile,					//词典文件路径
     //在本主进程中初始化追踪线程
     //Initialize the Tracking thread
     //(it will live in the main thread of execution, the one that called this constructor)
-    mpTracker = new Tracking(this,						//现在还不是很明白为什么这里还需要一个this指针  TODO  
+    mpTracker = new Tracking(this,						//现在还不是很明白为什么这里还需要一个this指针  TODO
     						 mpVocabulary,				//字典
     						 mpFrameDrawer, 			//帧绘制器
     						 mpMapDrawer,				//地图绘制器
@@ -114,10 +114,10 @@ System::System(const string &strVocFile,					//词典文件路径
     //初始化局部建图线程并运行
     //Initialize the Local Mapping thread and launch
     mpLocalMapper = new LocalMapping(mpMap, 				//指定使iomanip
-    								 mSensor==MONOCULAR);	// TODO 为什么这个要设置成为MONOCULAR？？？
+    								 mSensor==MONOCULAR);	// 为ture则设定为单目，否则为双目RGB-D
     //运行这个局部建图线程
     mptLocalMapping = new thread(&ORB_SLAM2::LocalMapping::Run,	//这个线程会调用的函数
-    							 mpLocalMapper);				//这个调用函数的参数
+    							 mpLocalMapper);				//这个函数对应的类实例，需要这个类实例才能够运作
 
     //Initialize the Loop Closing thread and launchiomanip
     mpLoopCloser = new LoopClosing(mpMap, 						//地图
@@ -167,7 +167,7 @@ cv::Mat System::TrackStereo(const cv::Mat &imLeft, 		//左侧图像
     	//不合法那就退出
         cerr << "ERROR: you called TrackStereo but input sensor was not set to STEREO." << endl;
         exit(-1);
-    }   
+    }
 
     //检查是否有运行模式的改变
     // Check mode change
@@ -240,7 +240,7 @@ cv::Mat System::TrackRGBD(const cv::Mat &im, const cv::Mat &depthmap, const doub
     {
         cerr << "ERROR: you called TrackRGBD but input sensor was not set to RGBD." << endl;
         exit(-1);
-    }    
+    }
 
     // Check mode change
     //检查模式改变
@@ -403,9 +403,9 @@ void System::Shutdown()
     }
 
     // Wait until all thread have effectively stopped
-    while(!mpLocalMapper->isFinished() || 
-    	  !mpLoopCloser->isFinished()  || 
-    	   mpLoopCloser->isRunningGBA())			
+    while(!mpLocalMapper->isFinished() ||
+    	  !mpLoopCloser->isFinished()  ||
+    	   mpLoopCloser->isRunningGBA())
     {
         usleep(5000);
     }
@@ -454,7 +454,7 @@ void System::SaveTrajectoryTUM(const string &filename)
     list<ORB_SLAM2::KeyFrame*>::iterator lRit = mpTracker->mlpReferences.begin();
     //所有帧对应的时间戳列表
     list<double>::iterator lT = mpTracker->mlFrameTimes.begin();
-    //每帧的追踪状态组成的列表       
+    //每帧的追踪状态组成的列表
     list<bool>::iterator lbL = mpTracker->mlbLost.begin();
     //对于每一个mlRelativeFramePoses中的帧lit
     for(list<cv::Mat>::iterator lit=mpTracker->mlRelativeFramePoses.begin(),
