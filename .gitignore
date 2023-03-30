@@ -23,4 +23,4 @@ build/
 lib/
 .idea/
 cmake-build-debug/
-Dataset/*
+CameraTrajectory*

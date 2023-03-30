@@ -15,10 +15,10 @@ test_mono()
 {
 	if [ ${1} == $V102 ]; then
 		echo "testing Monocular with Dataset: V1_02_medium..."
-		./Examples/Monocular/mono_euroc Vocabulary/ORBvoc.txt Examples/Monocular/EuRoC.yaml Dataset/EuRoC/V1_02_medium/mav0/cam0/data Examples/Monocular/EuRoC_TimeStamps/V102.txt 
+		./Examples/Monocular/mono_euroc Vocabulary/ORBvoc.txt Examples/Monocular/EuRoC.yaml ~/DataSet/EuRoC/V1_02_medium/mav0/cam0/data Examples/Monocular/EuRoC_TimeStamps/V102.txt 
 	elif [ ${1} == $MH50 ]; then
 		echo "testing Monocular with Dataset: MH_05_difficult..."
-		./Examples/Monocular/mono_euroc Vocabulary/ORBvoc.txt Examples/Monocular/EuRoC.yaml Dataset/EuRoC/MH_05_difficult/mav0/cam0/data Examples/Monocular/EuRoC_TimeStamps/MH05.txt 
+		./Examples/Monocular/mono_euroc Vocabulary/ORBvoc.txt Examples/Monocular/EuRoC.yaml ~/DataSet/EuRoC/MH_05_difficult/mav0/cam0/data Examples/Monocular/EuRoC_TimeStamps/MH05.txt 
 	else
 		echo "ERROR: unknown dataset: ${1}!"
 	fi
@@ -28,10 +28,10 @@ test_stereo()
 {
 	if [ ${1} == $V102 ]; then
 		echo "testing Stereo with Dataset: V1_02_medium..."
-		./Examples/Stereo/stereo_euroc Vocabulary/ORBvoc.txt Examples/Stereo/EuRoC.yaml Dataset/EuRoC/V1_02_medium/mav0/cam0/data Dataset/EuRoC/V1_02_medium/mav0/cam1/data Examples/Stereo/EuRoC_TimeStamps/V102.txt
+		./Examples/Stereo/stereo_euroc Vocabulary/ORBvoc.txt Examples/Stereo/EuRoC.yaml ~/DataSet/EuRoC/V1_02_medium/mav0/cam0/data Dataset/EuRoC/V1_02_medium/mav0/cam1/data Examples/Stereo/EuRoC_TimeStamps/V102.txt
 	elif [ ${1} == $MH50 ]; then
 		echo "testing Stereo with Dataset: MH_05_difficult..."
-		./Examples/Stereo/stereo_euroc Vocabulary/ORBvoc.txt Examples/Stereo/EuRoC.yaml Dataset/EuRoC/MH_05_difficult/mav0/cam0/data Dataset/EuRoC/MH_05_difficult/mav0/cam1/data Examples/Stereo/EuRoC_TimeStamps/MH05.txt
+		./Examples/Stereo/stereo_euroc Vocabulary/ORBvoc.txt Examples/Stereo/EuRoC.yaml ~/DataSet/EuRoC/MH_05_difficult/mav0/cam0/data Dataset/EuRoC/MH_05_difficult/mav0/cam1/data Examples/Stereo/EuRoC_TimeStamps/MH05.txt
 	else
 		echo "ERROR: unknown dataset: ${1}!"
 	fi
@@ -40,7 +40,7 @@ test_stereo()
 test_rgbd()
 {
 	echo "testing RGB-D with Dataset: fr2_large_with_loop..."
-	./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt Examples/RGB-D/TUM2.yaml Dataset/TUM/rgbd_dataset_freiburg2_large_with_loop Examples/RGB-D/associations/fr2_large_with_loop.txt
+	./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt Examples/RGB-D/TUM2.yaml ~/DataSet/TUM/rgbd_dataset_freiburg2_large_with_loop Examples/RGB-D/associations/fr2_large_with_loop.txt
 }
 
 
