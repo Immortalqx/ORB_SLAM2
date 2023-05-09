@@ -60,14 +60,14 @@ int main(int argc, char **argv) {
     while (capture.grab()) {
 
         capture >> im;
-        cv::resize(im, im, cv::Size(1280, 720));
-        tframe += 1;
 
         // step 4.2 图像的合法性检查
         if (im.empty()) {
             cerr << endl << "Failed to load image" << endl;
-            return 1;
+            break;
         }
+        cv::resize(im, im, cv::Size(1280, 720));
+        tframe += 1;
 
         // step 4.3 开始计时
         std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
