@@ -136,6 +136,9 @@ public:
     // 以TUM格式保存关键帧位姿。  TODO 是不是这也意味着，我可以使用g2o_viewer这样的软件去查看并且进行优化实验？
     void SaveKeyFrameTrajectoryTUM(const string &filename);     //指定文件名
 
+    // Save keyframe id and poses
+    void SaveKeyFrameIDandPose(const string &filename);     //指定文件名
+
     // Save camera trajectory in the KITTI dataset format.
     // NOTE Only for stereo and RGB-D. This method does not work for monocular.
     // Call first Shutdown()

@@ -554,6 +554,53 @@ void System::SaveKeyFrameTrajectoryTUM(const string &filename)
     cout << endl << "trajectory saved!" << endl;
 }
 
+//保存关键帧的轨迹
+void System::SaveKeyFrameIDandPose(const std::string &filename) {
+    cout << endl << "Saving keyframe id and pose to " << filename << " ..." << endl;
+
+    //获取关键帧vector并按照生成时间对其进行排序
+    vector<KeyFrame*> vpKFs = mpMap->GetAllKeyFrames();
+    sort(vpKFs.begin(),vpKFs.end(),KeyFrame::lId);
+
+    //本来这里需要进行原点校正，但是实际上没有做
+    // Transform all keyframes so that the first keyframe is at the origin.
+    // After a loop closure the first keyframe might not be at the origin.
+    //cv::Mat Two = vpKFs[0]->GetPoseInverse();
+
+    //文件写入的准备操作
+    ofstream f;
+    f.open(filename.c_str());
+    f << fixed;
+
+    //对于每个关键帧
+    for(size_t i=0; i<vpKFs.size(); i++)
+    {
+    	//获取该 关键帧
+        KeyFrame* pKF = vpKFs[i];
+
+        //原本有个原点校正，这里注释掉了
+       // pKF->SetPose(pKF->GetPose()*Two);
+
+        //如果这个关键帧是bad那么就跳过
+        if(pKF->isBad())
+            continue;
+
+        //抽取旋转部分和平移部分，前者使用四元数表示
+        cv::Mat R = pKF->GetRotation().t();
+        vector<float> q = Converter::toQuaternion(R);
+        cv::Mat t = pKF->GetCameraCenter();
+        //按照给定的格式输出到文件中
+        f << "ID:" << pKF->mTimeStamp * 1e9 << endl;
+//        f << "ID:" << pKF->mTimeStamp * 1e9
+//          << "\tT:" << setprecision(7) << " " << t.at<float>(0) << " " << t.at<float>(1) << " " << t.at<float>(2)
+//          << "\tR:" << q[0] << " " << q[1] << " " << q[2] << " " << q[3] << endl;
+    }
+
+    //关闭文件
+    f.close();
+    cout << endl << "id and pose saved!" << endl;
+}
+
 //按照KITTI数据集的格式将相机的运动轨迹保存到文件中
 void System::SaveTrajectoryKITTI(const string &filename)
 {

@@ -222,11 +222,11 @@ void LocalMapping::ProcessNewKeyFrame()
                 {
                     // 这些地图点可能来自双目或RGBD在创建关键帧中新生成的地图点，或者是CreateNewMapPoints 中通过三角化产生
                     // 将上述地图点放入mlpRecentAddedMapPoints，等待后续MapPointCulling函数的检验
-                    mlpRecentAddedMapPoints.push_back(pMP); 
+                    mlpRecentAddedMapPoints.push_back(pMP);
                 }
             }
         }
-    }    
+    }
 
     // Update links in the Covisibility Graph
     // Step 4：更新关键帧间的连接关系（共视图）
@@ -254,7 +254,7 @@ void LocalMapping::MapPointCulling()
     else
         nThObs = 3;
     const int cnThObs = nThObs;
-	
+
 	// Step 2：遍历检查新添加的地图点
     while(lit!=mlpRecentAddedMapPoints.end())
     {
@@ -307,7 +307,7 @@ void LocalMapping::CreateNewMapPoints()
     const vector<KeyFrame*> vpNeighKFs = mpCurrentKeyFrame->GetBestCovisibilityKeyFrames(nn);
 
     // 特征点匹配配置 最佳距离 < 0.6*次佳距离，比较苛刻了。不检查旋转
-    ORBmatcher matcher(0.6,false); 
+    ORBmatcher matcher(0.6,false);
 
     // 取出当前帧从世界坐标系到相机坐标系的变换矩阵
     cv::Mat Rcw1 = mpCurrentKeyFrame->GetRotation();
@@ -359,7 +359,7 @@ void LocalMapping::CreateNewMapPoints()
             if(baseline<pKF2->mb)
             continue;
         }
-        else    
+        else
         {
             // 单目相机情况
             // 相邻关键帧的场景深度中值
@@ -403,7 +403,7 @@ void LocalMapping::CreateNewMapPoints()
 
             // 当前匹配对在当前关键帧中的索引
             const int &idx1 = vMatchedIndices[ikp].first;
-            
+
             // 当前匹配对在邻接关键帧中的索引
             const int &idx2 = vMatchedIndices[ikp].second;
 
@@ -432,7 +432,7 @@ void LocalMapping::CreateNewMapPoints()
             const float cosParallaxRays = ray1.dot(ray2)/(cv::norm(ray1)*cv::norm(ray2));
 
             // 加1是为了让cosParallaxStereo随便初始化为一个很大的值
-            float cosParallaxStereo = cosParallaxRays+1;  
+            float cosParallaxStereo = cosParallaxRays+1;
             // cosParallaxStereo1、cosParallaxStereo2在后面可能不存在，需要初始化为较大的值
             float cosParallaxStereo1 = cosParallaxStereo;
             float cosParallaxStereo2 = cosParallaxStereo;
@@ -445,7 +445,7 @@ void LocalMapping::CreateNewMapPoints()
             else if(bStereo2)
                 // 传感器是双目相机,并且邻接的关键帧的这个点有对应的深度，和上面一样操作
                 cosParallaxStereo2 = cos(2*atan2(pKF2->mb/2,pKF2->mvDepth[idx2]));
-            
+
             // 得到双目观测的视差角中最小的那个
             cosParallaxStereo = min(cosParallaxStereo1,cosParallaxStereo2);
 
@@ -476,12 +476,12 @@ void LocalMapping::CreateNewMapPoints()
                 x3D = x3D.rowRange(0,3)/x3D.at<float>(3);
             }
             // 匹配点对夹角小，用双目恢复3D点
-            else if(bStereo1 && cosParallaxStereo1<cosParallaxStereo2)  
+            else if(bStereo1 && cosParallaxStereo1<cosParallaxStereo2)
             {
                 // 如果是双目，用视差角更大的那个双目信息来恢复，直接用已知3D点反投影了
-                x3D = mpCurrentKeyFrame->UnprojectStereo(idx1);                
+                x3D = mpCurrentKeyFrame->UnprojectStereo(idx1);
             }
-            else if(bStereo2 && cosParallaxStereo2<cosParallaxStereo1)  
+            else if(bStereo2 && cosParallaxStereo2<cosParallaxStereo1)
             {
                 x3D = pKF2->UnprojectStereo(idx2);
             }
@@ -524,7 +524,7 @@ void LocalMapping::CreateNewMapPoints()
                 // 双目情况
                 float u1 = fx1*x1*invz1+cx1;
                 // 根据视差公式计算假想的右目坐标
-                float u1_r = u1 - mpCurrentKeyFrame->mbf*invz1;     
+                float u1_r = u1 - mpCurrentKeyFrame->mbf*invz1;
                 float v1 = fy1*y1*invz1+cy1;
                 float errX1 = u1 - kp1.pt.x;
                 float errY1 = v1 - kp1.pt.y;
@@ -592,7 +592,7 @@ void LocalMapping::CreateNewMapPoints()
 
             // Step 6.9：为该MapPoint添加属性：
             // a.观测到该MapPoint的关键帧
-            pMP->AddObservation(mpCurrentKeyFrame,idx1);            
+            pMP->AddObservation(mpCurrentKeyFrame,idx1);
             pMP->AddObservation(pKF2,idx2);
 
             mpCurrentKeyFrame->AddMapPoint(pMP,idx1);
@@ -634,7 +634,7 @@ void LocalMapping::SearchInNeighbors()
 
     // 和当前关键帧相邻的关键帧，也就是一级相邻关键帧
     const vector<KeyFrame*> vpNeighKFs = mpCurrentKeyFrame->GetBestCovisibilityKeyFrames(nn);
-    
+
     // Step 2：存储一级相邻关键帧及其二级相邻关键帧
     vector<KeyFrame*> vpTargetKFs;
     // 开始对所有候选的一级关键帧展开遍历：
@@ -644,7 +644,7 @@ void LocalMapping::SearchInNeighbors()
         // 没有和当前帧进行过融合的操作
         if(pKFi->isBad() || pKFi->mnFuseTargetForKF == mpCurrentKeyFrame->mnId)
             continue;
-        // 加入一级相邻关键帧    
+        // 加入一级相邻关键帧
         vpTargetKFs.push_back(pKFi);
         // 标记已经加入
         pKFi->mnFuseTargetForKF = mpCurrentKeyFrame->mnId;
@@ -659,7 +659,7 @@ void LocalMapping::SearchInNeighbors()
             // 当然这个二级相邻关键帧要求没有和当前关键帧发生融合,并且这个二级相邻关键帧也不是当前关键帧
             if(pKFi2->isBad() || pKFi2->mnFuseTargetForKF==mpCurrentKeyFrame->mnId || pKFi2->mnId==mpCurrentKeyFrame->mnId)
                 continue;
-            // 存入二级相邻关键帧    
+            // 存入二级相邻关键帧
             vpTargetKFs.push_back(pKFi2);
         }
     }
@@ -686,7 +686,7 @@ void LocalMapping::SearchInNeighbors()
     // 用于进行存储要融合的一级邻接和二级邻接关键帧所有MapPoints的集合
     vector<MapPoint*> vpFuseCandidates;
     vpFuseCandidates.reserve(vpTargetKFs.size()*vpMapPointMatches.size());
-    
+
     //  Step 4.1：遍历每一个一级邻接和二级邻接关键帧，收集他们的地图点存储到 vpFuseCandidates
     for(vector<KeyFrame*>::iterator vitKF=vpTargetKFs.begin(), vendKF=vpTargetKFs.end(); vitKF!=vendKF; vitKF++)
     {
@@ -699,7 +699,7 @@ void LocalMapping::SearchInNeighbors()
             MapPoint* pMP = *vitMP;
             if(!pMP)
                 continue;
-            
+
             // 如果地图点是坏点，或者已经加进集合vpFuseCandidates，跳过
             if(pMP->isBad() || pMP->mnFuseCandidateForKF == mpCurrentKeyFrame->mnId)
                 continue;
@@ -747,7 +747,7 @@ cv::Mat LocalMapping::ComputeF12(KeyFrame *&pKF1, KeyFrame *&pKF2)
     cv::Mat t2w = pKF2->GetTranslation();
 
     cv::Mat R12 = R1w*R2w.t();
-    
+
     cv::Mat t12 = -R1w*R2w.t()*t2w+t1w;
 
     // 得到 t12 的反对称矩阵
@@ -887,13 +887,13 @@ void LocalMapping::KeyFrameCulling()
         const vector<MapPoint*> vpMapPoints = pKF->GetMapPointMatches();
 
         // 记录某个点被观测次数，后面并未使用
-        int nObs = 3;                     
+        int nObs = 3;
         // 观测次数阈值，默认为3
-        const int thObs=nObs;               
+        const int thObs=nObs;
         // 记录冗余观测点的数目
-        int nRedundantObservations=0;     
-                                                                                      
-        int nMPs=0;            
+        int nRedundantObservations=0;
+
+        int nMPs=0;
 
         // Step 3：遍历该共视关键帧的所有地图点，其中能被其它至少3个关键帧观测到的地图点为冗余地图点
         for(size_t i=0, iend=vpMapPoints.size(); i<iend; i++)
@@ -989,7 +989,7 @@ void LocalMapping::ResetIfRequested()
 {
     unique_lock<mutex> lock(mMutexReset);
     // 执行复位操作:清空关键帧缓冲区,清空待cull的地图点缓冲
-    
+
     if(mbResetRequested)
     {
         mlNewKeyFrames.clear();
