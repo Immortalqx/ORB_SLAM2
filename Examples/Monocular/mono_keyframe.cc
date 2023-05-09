@@ -69,32 +69,9 @@ int main(int argc, char **argv) {
             return 1;
         }
 
-        // step 4.3 开始计时
-//#ifdef COMPILEDWITHC11
-//        std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
-//#else
-//        std::chrono::monotonic_clock::time_point t1 = std::chrono::monotonic_clock::now();
-//#endif
-
         // Pass the image to the SLAM system
-        // step 4.4 追踪当前图像
+        // step 4.3 追踪当前图像
         SLAM.TrackMonocular(im, tframe / 1e9);
-
-        // step 4.5 追踪完成,停止当前帧的图像计时, 并计算追踪耗时
-
-//#ifdef COMPILEDWITHC11
-//        std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
-//#else
-//        std::chrono::monotonic_clock::time_point t2 = std::chrono::monotonic_clock::now();
-//#endif
-//
-//        double ttrack = std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count();
-//
-//        // Wait to load the next frame
-//        double T = 0.15;
-//
-//        if (ttrack < T)
-//            usleep((T - ttrack) * 1e6);
     }
 
     // step 5 如果所有的图像都预测完了,那么终止当前的SLAM系统

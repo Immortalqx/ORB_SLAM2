@@ -590,10 +590,10 @@ void System::SaveKeyFrameIDandPose(const std::string &filename) {
         vector<float> q = Converter::toQuaternion(R);
         cv::Mat t = pKF->GetCameraCenter();
         //按照给定的格式输出到文件中
-        f << "ID:" << pKF->mTimeStamp * 1e9 << endl;
-//        f << "ID:" << pKF->mTimeStamp * 1e9
-//          << "\tT:" << setprecision(7) << " " << t.at<float>(0) << " " << t.at<float>(1) << " " << t.at<float>(2)
-//          << "\tR:" << q[0] << " " << q[1] << " " << q[2] << " " << q[3] << endl;
+//        f << "ID:" << pKF->mTimeStamp * 1e9 << endl;
+        f << "ID:" << pKF->mTimeStamp * 1e9
+          << "\tT:" << setprecision(7) << " " << t.at<float>(0) << " " << t.at<float>(1) << " " << t.at<float>(2)
+          << "\tR:" << q[0] << " " << q[1] << " " << q[2] << " " << q[3] << endl;
     }
 
     //关闭文件
