@@ -130,8 +130,13 @@ Tracking::Tracking(
         fps=30;
 
     // Max/Min Frames to insert keyframes and to check relocalisation
+    //mMinFrames = 0;
+    //mMaxFrames = fps;
+    // IMMORTALQX: 修改成适合三维重建的关键帧选择策略, 0秒到2秒之间选择一个关键帧
+    //              MinFrames必须为0，不然很容易跟踪丢失(视角变化过大时)
+    //              MaxFrames不能过大，不然容易跟踪错误(图片纹理不丰富时)
     mMinFrames = 0;
-    mMaxFrames = fps;
+    mMaxFrames = fps * 2;
 
     //输出
     cout << endl << "Camera Parameters: " << endl;
@@ -1556,7 +1561,9 @@ bool Tracking::NeedNewKeyFrame()
 
     //单目情况下插入关键帧的频率很高    
     if(mSensor==System::MONOCULAR)
-        thRefRatio = 0.9f;
+        // IMMORTALQX: 修改的更低一点，用于三维重建的关键帧选择策略(太低了位姿的计算又会出问题)
+        thRefRatio = 0.75f;
+        //thRefRatio = 0.9f;
 
     // Condition 1a: More than "MaxFrames" have passed from last keyframe insertion
     // Step 7.2：很长时间没有插入关键帧，可以插入
