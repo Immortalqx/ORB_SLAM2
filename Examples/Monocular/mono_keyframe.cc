@@ -64,9 +64,14 @@ int main(int argc, char **argv) {
         // step 4.2 图像的合法性检查
         if (im.empty()) {
             cerr << endl << "Failed to load image" << endl;
-            break;
+            continue;
         }
-        cv::resize(im, im, cv::Size(1280, 720));
+        try {
+            cv::resize(im, im, cv::Size(1280, 720));
+        } catch (...) {
+            cerr << endl << "Resize error" << endl;
+            continue;
+        }
         tframe += 1;
 
         // step 4.3 开始计时
