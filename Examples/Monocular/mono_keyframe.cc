@@ -29,8 +29,9 @@ using namespace std;
 
 int main(int argc, char **argv) {
     // step 0 检查输入参数个数是否足够
-    if (argc != 4) {
-        cerr << endl << "Usage: ./mono_tum path_to_vocabulary path_to_settings path_to_video_file" << endl;
+    if (argc != 5) {
+        cerr << endl << "Usage: ./mono_tum path_to_vocabulary path_to_settings path_to_video_file saved_file_name"
+             << endl;
         return 1;
     }
 
@@ -96,7 +97,7 @@ int main(int argc, char **argv) {
     // Stop all threads
     SLAM.Shutdown();
 
-    SLAM.SaveKeyFrameIDandPose("KeyFrameIDandPose.txt");
+    SLAM.SaveKeyFrameIDandPose(argv[4]);
 
     return 0;
 }
