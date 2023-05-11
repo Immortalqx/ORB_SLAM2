@@ -129,14 +129,10 @@ int main(int argc, char **argv)
         // Wait to load the next frame
         // step 4.6 根据图像时间戳中记录的两张图像之间的时间和现在追踪当前图像所耗费的时间,继续等待指定的时间以使得下一张图像能够
         // 按照时间戳被送入到SLAM系统中进行跟踪
-        double T=0;
-        if(ni<nImages-1)
-            T = vTimestamps[ni+1]-tframe;
-        else if(ni>0)
-            T = tframe-vTimestamps[ni-1];
+        double T = 0.15;
 
-        if(ttrack<T)
-            usleep((T-ttrack)*1e6);
+        if (ttrack < T)
+            usleep((T - ttrack) * 1e6);
     }
 
     // step 5 如果所有的图像都预测完了,那么终止当前的SLAM系统
@@ -159,7 +155,8 @@ int main(int argc, char **argv)
     // step 7 保存TUM格式的相机轨迹
     // 估计是单目时有尺度漂移, 而LGA GBA都只能优化关键帧使尺度漂移最小, 普通帧所产生的轨迹漂移这里无能为力, 我猜作者这样就只
     // 保存了关键帧的位姿,从而避免普通帧带有尺度漂移的位姿对最终误差计算的影响
-    SLAM.SaveKeyFrameTrajectoryTUM("KeyFrameTrajectory.txt");
+    //SLAM.SaveKeyFrameTrajectoryTUM("KeyFrameTrajectory.txt");
+    SLAM.SaveKeyFrameIDandPose("KeyFrameID.txt");
 
     return 0;
 }
@@ -184,7 +181,7 @@ void LoadImages(const string &strImagePath, const string &strPathTimes,
             stringstream ss;
             ss << s;
             // 生成当前行所指出的RGB图像的文件名称
-            vstrImages.push_back(strImagePath + "/" + ss.str() + ".png");
+            vstrImages.push_back(strImagePath + "/" + ss.str() + ".jpg");
             double t;
             ss >> t;
             // 记录该图像的时间戳
