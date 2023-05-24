@@ -61,11 +61,8 @@ int main(int argc, char **argv)
     // step 3 依次追踪序列中的每一张图像
     cv::Mat im;
     double tframe = 0;
-    while (capture.grab())
+    while (capture.read(im))
     {
-
-        capture >> im;
-
         // step 4.2 图像的合法性检查
         if (im.empty())
         {
@@ -91,9 +88,10 @@ int main(int argc, char **argv)
 
         // step 4.5 追踪完成,停止当前帧的图像计时, 并计算追踪耗时
         std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
-        double ttrack = std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count();
+        double ttrack = std::chrono::duration_cast < std::chrono::duration < double > > (t2 - t1).count();
 
         // Wait to load the next frame
+        // 期望按照30Hz的频率运行
         double T = 1.0 / 30.0;
 
         if (ttrack < T)
