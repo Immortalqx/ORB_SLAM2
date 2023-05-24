@@ -27,9 +27,11 @@
 
 using namespace std;
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
     // step 0 检查输入参数个数是否足够
-    if (argc != 5) {
+    if (argc != 5)
+    {
         cerr << endl << "Usage: ./mono_tum path_to_vocabulary path_to_settings path_to_video_file saved_file_name"
              << endl;
         return 1;
@@ -41,7 +43,8 @@ int main(int argc, char **argv) {
     cv::VideoCapture capture;
     capture.open(argv[3]);
 
-    if (!capture.isOpened()) {
+    if (!capture.isOpened())
+    {
         cerr << "ERROR: Failed to load video" << endl;
         return 1;
     }
@@ -58,22 +61,26 @@ int main(int argc, char **argv) {
     // step 3 依次追踪序列中的每一张图像
     cv::Mat im;
     double tframe = 0;
-    while (capture.grab()) {
+    while (capture.grab())
+    {
 
         capture >> im;
 
         // step 4.2 图像的合法性检查
-        if (im.empty()) {
+        if (im.empty())
+        {
             cerr << endl << "Failed to load image" << endl;
             continue;
         }
-        try {
+        try
+        {
             cv::resize(im, im, cv::Size(1280, 720));
-        } catch (...) {
+        } catch (...)
+        {
             cerr << endl << "Resize error" << endl;
             continue;
         }
-        tframe += 1;
+        tframe += 100;
 
         // step 4.3 开始计时
         std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
@@ -87,7 +94,7 @@ int main(int argc, char **argv) {
         double ttrack = std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count();
 
         // Wait to load the next frame
-        double T = 0.15;
+        double T = 1.0 / 30.0;
 
         if (ttrack < T)
             usleep((T - ttrack) * 1e6);
